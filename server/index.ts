@@ -1,0 +1,15 @@
+import express, { Express, Request, Response } from 'express'
+import dotenv from 'dotenv'
+
+dotenv.config()
+const app: Express = express()
+const port = process.env.SERVER_PORT;
+
+app.get('/getUserInfo', (req: Request, res: Response) => {
+  res.send({ message: "Hello from server!" })
+});
+
+app.listen(port, () => {
+  console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
+});
+
