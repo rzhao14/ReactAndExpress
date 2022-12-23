@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState<any>({});
   const [handle, setHandle] = useState('');
 
   const handleSubmit = useCallback(() => {
@@ -28,6 +28,7 @@ function App() {
         <div>
          please choose Instagram handle:
              <select onChange={(e) => setHandle(e.target.value)}>
+             <option value='' key='empty'>--</option>
                 {handles.map((handle)=>{
                   return <option value={handle} key={handle}>{handle}</option>
                 })}
@@ -37,7 +38,15 @@ function App() {
          <input type="submit" value="Submit" onClick={handleSubmit} />
         </div>
         <div>result</div>
-        <div> {JSON.stringify(data)}</div>
+        <div>
+            {data &&
+            <ul>
+            <li>{data.fullName}</li>
+            <li>{data.biography}</li>
+            <li>{data.followerCount}</li>
+            </ul>
+            }
+        </div>
     </div>
   );
 }
