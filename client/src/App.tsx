@@ -7,9 +7,13 @@ function App() {
   const [handle, setHandle] = useState('');
 
   const handleSubmit = useCallback(() => {
-    fetch('/getUserInfo?handle=' + handle )
-      .then((res) => res.json())
-      .then((data) => setData(data))
+          console.log(handle)
+      if(handle && handle!==''){
+        console.log('calling')
+          fetch('/getUserInfo?handle=' + handle )
+            .then((res) => res.json())
+            .then((data) => setData(data))
+      }
   }, [])
 
   const handles = [
