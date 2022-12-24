@@ -31,6 +31,7 @@ console.log(req.query.handle)
             }
           })
          const user = await rawResult.data.data.user
+//          const user = mocks.data.user
          const edges = user.edge_owner_to_timeline_media?.edges
          const posts = edges.map((edge:any)=>{
           const node = edge?.node
@@ -52,6 +53,9 @@ console.log(req.query.handle)
         cache.set(req.query.handle, result)
        } catch (e){
         console.log(e)
+        result ={
+            error: 'error fetching user info'
+        }
        }
 
      res.send(result)

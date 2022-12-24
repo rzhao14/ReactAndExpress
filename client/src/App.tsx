@@ -1,25 +1,22 @@
 import React, { useCallback, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [data, setData] = React.useState<any>(null);
+  const [data, setData] = useState<any>(null);
   const [handle, setHandle] = useState('');
 
   const handleSubmit = useCallback(() => {
       if(handle && handle!==''){
-        console.log('calling')
           fetch('/getUserInfo?handle=' + handle )
             .then((res) => res.json())
             .then((data) => setData(data))
       }
   }, [handle])
 
-  const handleSelect = useCallback((e:React.ChangeEvent<HTMLInputElement>) => {
-     setHandle(e.target.value)
+  const handleSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
      setData(null)
- }, [handle])
-
+     setHandle(e.target.value)
+ }
 
   const handles = [
     'mavrckco',
@@ -36,7 +33,7 @@ function App() {
       </header>
         <div>
          please choose Instagram handle:
-             <select onChange={(e) => setHandle(e.target.value)}>
+             <select onChange={handleSelect}>
              <option value='' key='empty'>--</option>
                 {handles.map((handle)=>{
                   return <option value={handle} key={handle}>{handle}</option>
@@ -48,14 +45,18 @@ function App() {
         </div>
         <div>result</div>
         <div>
-            {data &&
+            {data && !data.error &&
             <ul>
             <li>{data.fullName}</li>
             <li>{data.biography}</li>
             <li>{data.followerCount}</li>
+            {data.posts.map((post:any)=>{
+                return <li>{JSON.stringify(post)}</li>
+            })}
             </ul>
             }
         </div>
+        <div>{data && data.error &&  <li>{data.error}</li>}</div>
     </div>
   );
 }
