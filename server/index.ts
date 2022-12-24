@@ -18,7 +18,8 @@ app.get('/getUserInfo', async (req: Request, res: Response) => {
 //    const user = mocks.data.user
 console.log(req.query.handle)
    const cached = cache.get(req.query.handle)
-   if(cached){
+   const force = req.query.force
+   if(cached && force!=='true'){
     console.log("return cached")
     res.send(cached)
    }else{
@@ -31,7 +32,7 @@ console.log(req.query.handle)
             }
           })
          const user = await rawResult.data.data.user
-//          const user = mocks.data.user
+        //  const user = mocks.data.user
          const edges = user.edge_owner_to_timeline_media?.edges
          const posts = edges.map((edge:any)=>{
           const node = edge?.node
@@ -48,6 +49,7 @@ console.log(req.query.handle)
           biography: user.biography,
           fullName: user.full_name,
           followerCount: user.edge_followed_by?.count,
+          updatedTime: new Date().toISOString(),
           posts
          }
         cache.set(req.query.handle, result)

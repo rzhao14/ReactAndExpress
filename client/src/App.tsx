@@ -4,19 +4,27 @@ import './App.css';
 function App() {
   const [data, setData] = useState<any>(null);
   const [handle, setHandle] = useState('');
+  const [forceUpdate, setForceUpdate] = useState(false);
 
   const handleSubmit = useCallback(() => {
       if(handle && handle!==''){
-          fetch('/getUserInfo?handle=' + handle )
+          fetch(`/getUserInfo?handle=${handle}&force=${forceUpdate}`)
             .then((res) => res.json())
             .then((data) => setData(data))
       }
-  }, [handle])
+  }, [handle, forceUpdate])
+
+  const handleClear = useCallback(() => {
+    setData(null)
+}, [])
 
   const handleSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
      setData(null)
      setHandle(e.target.value)
  }
+ const handleChange = () => {
+  setForceUpdate(!forceUpdate);
+};
 
   const handles = [
     'mavrckco',
@@ -32,7 +40,7 @@ function App() {
         <p>Get user Info from Instagram</p>
       </header>
         <div>
-         please choose Instagram handle:
+         Please choose Instagram handle:
              <select onChange={handleSelect}>
              <option value='' key='empty'>--</option>
                 {handles.map((handle)=>{
@@ -41,15 +49,21 @@ function App() {
              </select>
          or type:
          <input type="text" name="handle" onChange={(e) => setHandle(e.target.value)} value={handle}/>
-         <input type="submit" value="Submit" onClick={handleSubmit} />
+         <input type="submit" value="Get" onClick={handleSubmit} />
+         <input type="submit" value="clear" onClick={handleClear} />
+         Force Update?
+         <input type="checkbox"           
+                checked={forceUpdate}
+                onChange={handleChange} />
         </div>
-        <div>result</div>
+        <div>User Info Result</div>
         <div>
             {data && !data.error &&
             <ul>
-            <li>{data.fullName}</li>
-            <li>{data.biography}</li>
-            <li>{data.followerCount}</li>
+            <li>Full Name: {data.fullName}</li>
+            <li>Bio: {data.biography}</li>
+            <li>followers: {data.followerCount}</li>
+            <li>updated: {data.updatedTime}</li>
             {data.posts.map((post:any)=>{
                 return <li>{JSON.stringify(post)}</li>
             })}
