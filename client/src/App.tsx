@@ -3,18 +3,23 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [data, setData] = React.useState<any>({});
+  const [data, setData] = React.useState<any>(null);
   const [handle, setHandle] = useState('');
 
   const handleSubmit = useCallback(() => {
-          console.log(handle)
       if(handle && handle!==''){
         console.log('calling')
           fetch('/getUserInfo?handle=' + handle )
             .then((res) => res.json())
             .then((data) => setData(data))
       }
-  }, [])
+  }, [handle])
+
+  const handleSelect = useCallback((e:React.ChangeEvent<HTMLInputElement>) => {
+     setHandle(e.target.value)
+     setData(null)
+ }, [handle])
+
 
   const handles = [
     'mavrckco',

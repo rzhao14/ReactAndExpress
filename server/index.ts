@@ -16,37 +16,44 @@ const cache= new LRU_TTL({
 app.get('/getUserInfo', async (req: Request, res: Response) => {
 
 //    const user = mocks.data.user
+console.log(req.query.handle)
    const cached = cache.get(req.query.handle)
    if(cached){
     console.log("return cached")
     res.send(cached)
    }else{
        console.log('calling out')
-       const rawResult = await axios.get(`${process.env.INSTAGRAM_URL}api/v1/users/web_profile_info/?username=${req.query.handle}`, {
-         headers: {
-           'User-Agent': 'Instagram 219.0.0.12.117 Android'
-         }
-       })
-      const user = await rawResult.data.data.user
-      const edges = user.edge_owner_to_timeline_media?.edges
-      const posts = edges.map((edge:any)=>{
-       const node = edge?.node
-       const post = {
-           postType: node.__typename,
-           mediaUrl: node.display_url,
-           numberOfLikes: node.edge_liked_by?.count || 0,
-           numberOfComments: node.edge_media_to_comment?.count || 0
-       }
-       return post
-      })
+       var result = {}
+       try{
+          const rawResult = await axios.get(`${process.env.INSTAGRAM_URL}api/v1/users/web_profile_info/?username=${req.query.handle}`, {
+            headers: {
+              'User-Agent': 'Instagram 219.0.0.12.117 Android'
+            }
+          })
+         const user = await rawResult.data.data.user
+         const edges = user.edge_owner_to_timeline_media?.edges
+         const posts = edges.map((edge:any)=>{
+          const node = edge?.node
+          const post = {
+              postType: node.__typename,
+              mediaUrl: node.display_url,
+              numberOfLikes: node.edge_liked_by?.count || 0,
+              numberOfComments: node.edge_media_to_comment?.count || 0
+          }
+          return post
+         })
 
-      const result = {
-       biography: user.biography,
-       fullName: user.full_name,
-       followerCount: user.edge_followed_by?.count,
-       posts
-      }
-     cache.set(req.query.handle, result)
+         result = {
+          biography: user.biography,
+          fullName: user.full_name,
+          followerCount: user.edge_followed_by?.count,
+          posts
+         }
+        cache.set(req.query.handle, result)
+       } catch (e){
+        console.log(e)
+       }
+
      res.send(result)
    }
 });
