@@ -16,7 +16,6 @@ const cache= new LRU_TTL({
 app.get('/getUserInfo', async (req: Request, res: Response) => {
 
 //    const user = mocks.data.user
-console.log(req.query.handle)
    const cached = cache.get(req.query.handle)
    const force = req.query.force
    if(cached && force!=='true'){
@@ -26,13 +25,13 @@ console.log(req.query.handle)
        console.log('calling out')
        var result = {}
        try{
-          const rawResult = await axios.get(`${process.env.INSTAGRAM_URL}api/v1/users/web_profile_info/?username=${req.query.handle}`, {
-            headers: {
-              'User-Agent': 'Instagram 219.0.0.12.117 Android'
-            }
-          })
-         const user = await rawResult.data.data.user
-        //  const user = mocks.data.user
+        //   const rawResult = await axios.get(`${process.env.INSTAGRAM_URL}api/v1/users/web_profile_info/?username=${req.query.handle}`, {
+        //     headers: {
+        //       'User-Agent': 'Instagram 219.0.0.12.117 Android'
+        //     }
+        //   })
+        //  const user = await rawResult.data.data.user
+         const user = mocks.data.user
          const edges = user.edge_owner_to_timeline_media?.edges
          const posts = edges.map((edge:any)=>{
           const node = edge?.node

@@ -35,3 +35,11 @@
     transform: rotate(360deg);
   }
 }
+
+table, th, td {
+  border: 1px solid;
+}
+
+ul {
+  text-align: left;
+}
