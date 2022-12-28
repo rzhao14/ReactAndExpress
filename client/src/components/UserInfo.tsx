@@ -1,4 +1,5 @@
-function UserInfo(data: any) {
+function UserInfo(props: any) {
+    const data = props.data
 
     return (
         <>
@@ -16,20 +17,24 @@ function UserInfo(data: any) {
               Most Recent POSTS:
               </ul>
               <table >
-                <tr>
-                  <th>Type</th>
-                  <th>Likes</th>
-                  <th>Comments</th>
-                  <th>url</th>
-                </tr>
+                <thead> 
+                    <tr>
+                    <th>Type</th>
+                    <th>Likes</th>
+                    <th>Comments</th>
+                    <th>url</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {data.posts.map((post:any)=>{
-                  return <tr>
+                  return <tr key={post.mediaUrl}>
                     <td>{post.postType.substring(5)}</td>
                     <td>{post.numberOfLikes}</td>
                     <td>{post.numberOfComments}</td>
                     <td>{post.mediaUrl}</td>
                   </tr>
-              })}
+               })}
+                </tbody>
               </table>
             </>
             }
