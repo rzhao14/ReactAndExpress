@@ -1,11 +1,15 @@
 {
-    "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:recommended",
+        "tslint-react",
+        "tslint-config-prettier"
     ],
-    "jsRules": {},
+    "rulesDirectory": [
+        "tslint-plugin-prettier"
+    ],
     "rules": {
-        "trailing-comma": [ false ]
-    },
-    "rulesDirectory": []
+        "prettier": true,
+        "interface-name": false,
+        "jsx-no-lambda": false
+    }
 }
